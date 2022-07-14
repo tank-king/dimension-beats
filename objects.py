@@ -220,29 +220,6 @@ class LineBullet1(BaseObject):
         pygame.draw.line(surf, 'white', points[0], points[1], 2)
 
 
-class LineBullet2(BaseObject):
-    VEL = 0.1
-    LENGTH = 50
-    COLOUR = "RED"
-    BORDER_COLOUR = "WHITE"
-
-    def __init__(self, c_pos, _dir):
-        super().__init__()
-        self.c_pos = c_pos
-        self._dir = _dir
-        self.pos1 = pygame.Vector2(self.c_pos)
-        self.pos2 = self.c_pos + self._dir * self.LENGTH
-
-    def update(self, events: list[pygame.event.Event]):
-        self.pos1 += self._dir * self.VEL
-        self.pos2 += self._dir * self.VEL
-
-    def draw(self, surf: pygame.Surface):
-        pygame.draw.line(surf, self.COLOUR, self.pos1, self.pos2, width=4)
-        pygame.draw.circle(surf, self.BORDER_COLOUR, self.pos2, 10)
-        pygame.draw.circle(surf, self.COLOUR, self.pos2, 8)
-
-
 class LineSpreadBullet(BaseObject):
     def __init__(self, pos=(WIDTH // 2, HEIGHT // 2), target_pos=(WIDTH // 2, HEIGHT // 2)):
         super().__init__()
@@ -986,6 +963,8 @@ class TriangleBullet1(BaseObject):
     def update(self, events: list[pygame.event.Event]):
         self.x += self.dx
         self.y += self.dy
+        if not pygame.Rect(0, 0, WIDTH, HEIGHT).inflate(100, 100).collidepoint(self.x, self.y):
+            self.alive = False
 
     def draw(self, surf: pygame.Surface):
         draw_triangle(surf, self.pos, length=self.length, angle=self.angle)

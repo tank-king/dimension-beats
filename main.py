@@ -1,5 +1,7 @@
 import asyncio
 
+import pygame
+
 from config import *
 from constants import *
 from menu import MenuManager
@@ -17,7 +19,7 @@ except pygame.error:
     except pygame.error:
         music_init = False
 
-pygame.key.set_repeat(500, 100)
+# pygame.key.set_repeat(500, 100)
 
 # setting global variables default value
 
@@ -31,6 +33,7 @@ Globals.set(SOUND_VALUE, 0)
 Globals.set(ELAPSED_TIME_FOR_SOUNDTRACK, 0)
 Globals.set(TOTAL_DURATION_OF_SOUNDTRACK, 0)
 
+# W, H = 1280 * 0.9, 720 * 0.9
 
 # TODO add subtitle manager
 
@@ -38,7 +41,8 @@ Globals.set(TOTAL_DURATION_OF_SOUNDTRACK, 0)
 class Game:
     def __init__(self):
         self.full_screen = True
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
+        self.screen = pygame.display.set_mode((W, H))
+        self.s = pygame.Surface((WIDTH, HEIGHT))
         self.manager = MenuManager()
         self.clock = pygame.time.Clock()
 
@@ -59,16 +63,18 @@ class Game:
                             if self.manager.mode not in ('point', 'line', 'triangle'):
                                 self.manager.switch_mode('home', reset=False, transition=True)
                         # sys.exit(0)
-                    if e.key == pygame.K_f:
-                        self.full_screen = not self.full_screen
-                        if self.full_screen:
-                            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
-                        else:
-                            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
-            # self.screen.fill('black')
+                    # if e.key == pygame.K_f:
+                    #     self.full_screen = not self.full_screen
+                    #     if self.full_screen:
+                    #         self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
+                    #     else:
+                    #         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+            self.screen.fill('black')
+            # self.s.fill('black')
             self.manager.update(events)
-            self.manager.draw(self.screen)
-            pygame.draw.rect(self.screen, 'white', self.screen.get_rect(), 3)
+            self.manager.draw(self.s)
+            pygame.draw.rect(self.s, 'white', self.s.get_rect(), 3)
+            self.screen.blit(self.s, self.s.get_rect(center=(W // 2, H // 2)))
             pygame.display.update()
             await asyncio.sleep(0)
             # print(self.clock.get_fps())

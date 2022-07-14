@@ -12,6 +12,8 @@ import sys
 WIDTH = int(800 * 1.0)  # width of the screen
 HEIGHT = int(600 * 1.0)  # height of the screen
 
+W, H = 1280 * 0.9, 720 * 0.9
+
 print(WIDTH, HEIGHT)
 
 VOLUME = 100  # sound volume

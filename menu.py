@@ -1,11 +1,14 @@
 import random
 import sys
 
+import pygame.draw
+
 from objects import *
 from sounds import SoundManager
 from subtitles import SubtitleManager, Subtitle, get_typed_subtitles
 from transition import TransitionManager
 
+from config import W, WIDTH, H, HEIGHT
 
 class Menu:
     """
@@ -548,6 +551,19 @@ class Settings(Menu):
         self.pin_state = [0, 0, 0, 0]  # 1 -> hover, 2 -> clicked
         self.pin_to_del: Union[int, None] = None
 
+    @staticmethod
+    def get_mouse_pos():
+        x, y = pygame.mouse.get_pos()
+        dx, dy = W - WIDTH, H - HEIGHT
+        x = clamp(x, dx / 2, W - dx / 2)
+        y = clamp(y, dy / 2, H - dy / 2)
+
+        x -= dx / 2
+        y -= dy / 2
+        # x = map_to_range(x, dx / 2, W - dx / 2, 0, WIDTH)
+        # y = map_to_range(y, dy / 2, H - dy / 2, 0, HEIGHT)
+        return x, y
+
     def update(self, events: list[pygame.event.Event]):
         dt = 0.16
         if self.pin_to_del is not None:
@@ -565,14 +581,14 @@ class Settings(Menu):
         for ev in events:
             if ev.type == pygame.MOUSEMOTION:
                 for i in range(len(self.pins)):
-                    if pygame.Vector2(self.pins[i]).distance_squared_to(pygame.mouse.get_pos()) <= self.PIN_RAD ** 2:
+                    if pygame.Vector2(self.pins[i]).distance_squared_to(self.get_mouse_pos()) <= self.PIN_RAD ** 2:
                         self.pin_state[i] = 1
                     else:
                         self.pin_state[i] = 0
 
             if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
                 for i in range(len(self.pins)):
-                    if pygame.Vector2(self.pins[i]).distance_squared_to(pygame.mouse.get_pos()) <= self.PIN_RAD ** 2:
+                    if pygame.Vector2(self.pins[i]).distance_squared_to(self.get_mouse_pos()) <= self.PIN_RAD ** 2:
                         self.pin_state[i] = 2
                         self.pin_to_del = i
 
@@ -593,6 +609,7 @@ class Settings(Menu):
                 pygame.draw.circle(surf, self.PIN_HOVER_COLOR, self.pins[i], self.PIN_RAD)
             if self.pin_state[i] == 2:
                 pygame.draw.circle(surf, self.PIN_CLICK_COLOR, self.pins[i], self.PIN_RAD)
+        # pygame.draw.rect(surf, 'white', (*self.get_mouse_pos(), 10, 10))
 
 
 class MenuManager:
