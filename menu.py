@@ -293,6 +293,7 @@ class LevelIntro(Menu):
             self.callback = True
         if self.callback:
             Globals.set(UPCOMING_LEVEL, '')
+            Globals.set(CHECKPOINT, 0)
             self.manager.transition_manager.set_transition('fade')
             self.manager.switch_mode(self.upcoming_level, transition=True)
             self.callback = None
@@ -364,10 +365,19 @@ class PointEnemyScene(Menu):
         self.manager.object_manager.add(PointEnemy())
         # self.manager.object_manager.add(PointSpreadBullet(target_pos=(WIDTH // 2, 150)))
         self.manager.sound_manager.stop()
-        self.manager.sound_manager.play('points', start=0)
+        self.manager.sound_manager.play('points', start=Globals.get(CHECKPOINT) if Globals.get(CHECKPOINT) else 0)
         self.theme_color = 'red'
+        self.checkpoints = [
+            15, 25, 43, 57, 74, 100, 110
+        ]
 
     def update(self, events: list[pygame.event.Event]):
+        try:
+            for i in self.checkpoints:
+                if Globals.get(ELAPSED_TIME_FOR_SOUNDTRACK) > i:
+                    Globals.set(CHECKPOINT, i)
+        except TypeError:
+            pass
         try:
             if not self.manager.object_manager.player.alive:
                 # print(self.name)
@@ -410,11 +420,20 @@ class LineEnemyScene(Menu):
         self.manager.object_manager.init()
         self.manager.object_manager.add(LineEnemy())
         self.manager.sound_manager.stop()
-        self.manager.sound_manager.play('lines', start=0)
+        self.manager.sound_manager.play('lines', start=Globals.get(CHECKPOINT) if Globals.get(CHECKPOINT) else 0)
         self.theme_color = 'blue'
+        self.checkpoints = [
+            14, 25, 35, 45, 55, 65
+        ]
         # self.background = (0, 0, 5)
 
     def update(self, events: list[pygame.event.Event]):
+        try:
+            for i in self.checkpoints:
+                if Globals.get(ELAPSED_TIME_FOR_SOUNDTRACK) > i:
+                    Globals.set(CHECKPOINT, i)
+        except TypeError:
+            pass
         try:
             if not self.manager.object_manager.player.alive:
                 Globals.set(RETRY_MESSAGE, 'Press E to play in easy mode')
@@ -452,11 +471,21 @@ class TriangleEnemyScene(Menu):
     def __init__(self, manager: 'MenuManager', name='menu'):
         super().__init__(manager, name)
         self.manager.object_manager.init()
+        # Globals.set(CHECKPOINT, 0)
         self.manager.object_manager.add(TriangleEnemy())
         self.manager.sound_manager.stop()
-        self.manager.sound_manager.play('triangles', start=0)
+        self.manager.sound_manager.play('triangles', start=Globals.get(CHECKPOINT) if Globals.get(CHECKPOINT) else 0)
+        self.checkpoints = [
+            15, 35, 65
+        ]
 
     def update(self, events: list[pygame.event.Event]):
+        try:
+            for i in self.checkpoints:
+                if Globals.get(ELAPSED_TIME_FOR_SOUNDTRACK) > i:
+                    Globals.set(CHECKPOINT, i)
+        except TypeError:
+            pass
         try:
             if not self.manager.object_manager.player.alive:
                 Globals.set(RETRY_MESSAGE, 'Press E to play in easy mode')

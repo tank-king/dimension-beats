@@ -6,6 +6,7 @@ CURRENT_LEVEL = 'current-level'
 PREVIOUS_LEVEL = 'previous-level'
 UPCOMING_LEVEL = 'upcoming-level'
 
+CHECKPOINT = 0  # time
 MUSIC_INIT = 'music-init'
 SOUND_VALUE = 'sound-value'
 ELAPSED_TIME_FOR_SOUNDTRACK = 'sound-track-elapsed-time'

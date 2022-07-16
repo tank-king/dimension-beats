@@ -32,6 +32,7 @@ Globals.set(MUSIC_INIT, music_init)
 Globals.set(SOUND_VALUE, 0)
 Globals.set(ELAPSED_TIME_FOR_SOUNDTRACK, 0)
 Globals.set(TOTAL_DURATION_OF_SOUNDTRACK, 0)
+Globals.set(CHECKPOINT, 0)
 
 # W, H = 1280 * 0.9, 720 * 0.9
 
